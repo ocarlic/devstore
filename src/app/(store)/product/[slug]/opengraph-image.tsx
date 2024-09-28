@@ -1,5 +1,5 @@
 import { api } from "@/data/api";
-import { Product } from "@/data/types/products";
+import { Product } from "@/data/types/product";
 import { ImageResponse } from "next/og";
 import { env } from "process";
 import colors from "tailwindcss/colors";
