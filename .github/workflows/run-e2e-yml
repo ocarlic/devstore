@@ -14,27 +14,18 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install PNPM
-        uses: pnpm/action-setup@v2
+      - name: Setup yarn cache
+        uses: actions/cache@v3
         with:
-          version: 8
-          run_install: false
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: |
+            ~/.yarn/cache
+            **/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: pnpm install
+        run: yarn install
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
@@ -42,5 +33,5 @@ jobs:
           APP_URL: "http://localhost:3000"
           NEXT_PUBLIC_API_BASE_URL: "https://ignite-devstore-api-three-amber.vercel.app"
         with:
-          build: npm run build
-          start: npm start
+          build: yarn build
+          start: yarn start
